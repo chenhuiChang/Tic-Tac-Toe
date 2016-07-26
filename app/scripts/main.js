@@ -7,9 +7,45 @@ var itemArr = ['<i class="fa fa-circle-o fa-5x centerlize" aria-hidden="true"></
 restart();
 computer.term = false;
 // mode: chlid, normal, master
-computer.mode = "chlid";
+computer.mode = "normal";
 computer.findDanger = function (enemy) {
-
+    var indexes = [], i = -1;
+    while (i = blockArr.indexOf(enemy, i + 1) != -1) {
+        indexes.push(i);
+    }
+    //find 2 in 3
+    var dangerList = new Array(8); 
+    dangerList[0] = [1,2,3];
+    dangerList[1] = [4,5,6];
+    dangerList[2] = [7,8,9];
+    dangerList[3] = [1,4,7];
+    dangerList[4] = [2,5,8];
+    dangerList[5] = [3,6,9];
+    dangerList[6] = [1,5,9];
+    dangerList[7] = [3,5,7];
+    
+    var match, danger = [], live = 0;
+    for (i = 0; i < dangerList; i++) {
+        match = 0;
+        live = 0;
+        dangerList[i].forEach(function (element) {
+            if (indexes.indexOf(element) != -1) match++;
+            else live = element;
+        });
+        if (match === 2) {
+            if (live !== 0) danger.push([i,live]);
+        }
+    }
+    if (danger.length === 1) {
+        return danger[0][1];
+    }
+    else {
+        for(i=1;i<blockArr.length;i++){
+            if (blockArr[i] === 5) {
+                return i;
+            }
+        }
+    }
 }
 computer.run = function () {
     computer.term = false;
@@ -25,7 +61,7 @@ computer.run = function () {
     } else if (this.mode === "normal") {
         var friend = item,
             enemy = item ^ 1;
-        this.findDanger(enemy);
+        chooseB(this.findDanger(enemy));
     }
 }
 
