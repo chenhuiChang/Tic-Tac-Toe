@@ -1,31 +1,76 @@
-var itemArr = ['<i class="fa fa-circle-o fa-5x centerlize" aria-hidden="true"></i>', '<i class="fa fa-times-circle fa-5x centerlize" aria-hidden="true"></i>'],
+var itemArr = ['<i class="fa fa-circle-o fa-5x centerlize" aria-hidden="true"></i>',
+    '<i class="fa fa-times-circle fa-5x centerlize" aria-hidden="true"></i>'],
     item = 0,
     count = 0,
     blockArr = new Array(10),
     i,
     computer = {};
 restart();
-computer.term = false;
-// mode: chlid, normal, master
-computer.mode = "normal";
-computer.findDanger = function (enemy) {
-    var indexes = [], i = -1;
-    while (i = blockArr.indexOf(enemy, i + 1) != -1) {
-        indexes.push(i);
+computer.init = function () {
+    this.mode = 'master';// mode: chlid, normal, master
+    this.term = false;
+    this.winList = new Array(8);
+    this.winList[0] = [1, 2, 3];
+    this.winList[1] = [4, 5, 6];
+    this.winList[2] = [7, 8, 9];
+    this.winList[3] = [1, 4, 7];
+    this.winList[4] = [2, 5, 8];
+    this.winList[5] = [3, 6, 9];
+    this.winList[6] = [1, 5, 9];
+    this.winList[7] = [3, 5, 7];
+};
+computer.init();
+computer.findChance = function (friend) {
+    var i = 0,
+        friArr = [],
+        match,
+        winPoint = 0,
+        chance = [];
+    for (i = 1; i < blockArr.length; i++){
+        if (blockArr[i] == friend) {
+            friArr.push(i);
+        }
     }
+    for (i = 0; i < this.winList.length; i++) {
+        match = 0;
+        winPoint = 0;
+        this.winList[i].forEach(function(element){
+            if (friArr.indexOf(element) !== -1){
+                match++;
+            } 
+            else winPoint = element;
+        });
+        if (match === 2) {
+
+            if (winPoint !== 0) chance.push(winPoint);
+        }
+    }
+    if (chance.length === 0) {
+        // console.log("No Chance");
+        return -1;
+    } else {
+        // console.log("Find Chance");
+        for (i = 0; i < chance.length; i++) {
+            if (blockArr[chance[i]] === 5) {
+                return chance[i];
+            }
+        }
+        return -1;
+    }
+}
+computer.findDanger = function (enemy) {
+    var indexes = [],
+        i = -1,
+        match, 
+        danger = [],
+        live = 0;
+    do {
+        i = blockArr.indexOf(enemy, i + 1);
+        if (i != -1) indexes.push(i);
+    } while (i != -1);
     //find 2 in 3
-    var dangerList = new Array(8); 
-    dangerList[0] = [1,2,3];
-    dangerList[1] = [4,5,6];
-    dangerList[2] = [7,8,9];
-    dangerList[3] = [1,4,7];
-    dangerList[4] = [2,5,8];
-    dangerList[5] = [3,6,9];
-    dangerList[6] = [1,5,9];
-    dangerList[7] = [3,5,7];
-    
-    var match, danger = [], live = 0;
-    for (i = 0; i < dangerList; i++) {
+    var dangerList = this.winList; 
+    for (i = 0; i < dangerList.length; i++) {
         match = 0;
         live = 0;
         dangerList[i].forEach(function (element) {
@@ -35,34 +80,59 @@ computer.findDanger = function (enemy) {
         if (match === 2) {
             if (live !== 0) danger.push([i,live]);
         }
-    }
-    if (danger.length === 1) {
-        return danger[0][1];
+    }  
+    if (danger.length === 0) {
+        // console.log("No danger");
+        return -1;
     }
     else {
-        for(i=1;i<blockArr.length;i++){
-            if (blockArr[i] === 5) {
-                return i;
+        // console.log("Find danger");
+        for (i = 0; i < danger.length; i++) {
+            if (blockArr[danger[i][1]] === 5) {
+                return danger[i][1];
             }
         }
+        return -1;
     }
 }
 computer.run = function () {
     computer.term = false;
+    var friend = item,
+        enemy = item ^ 1,
+        danger = this.findDanger(enemy),
+        chance = this.findChance(friend);
     if (blockArr[5] === 5) {
         chooseB(5);
-    } else if (this.mode === "chlid") {
-        for(i=1;i<blockArr.length;i++){
-            if (blockArr[i] === 5) {
-                chooseB(i);
-                break;
-            }
+    } else if (this.mode === 'chlid') {
+        chooseB(findRandom());
+    } else if (this.mode === 'normal') {
+        if (danger != -1) {
+            chooseB(danger);
+        } else {
+            chooseB(findRandom());
         }
-    } else if (this.mode === "normal") {
-        var friend = item,
-            enemy = item ^ 1;
-        chooseB(this.findDanger(enemy));
+    } else if (this.mode === 'master') {
+        if (chance != -1) {
+            chooseB(chance);
+        } else if (danger != -1) {
+            chooseB(danger);
+        } else {
+            chooseB(findRandom());
+        }
     }
+}
+
+function findRandom() {
+    var i = 1,
+        place = [];
+    for (i =1;i<blockArr.length;i++) {
+        if (blockArr[i]===5) {
+            place.push(i);
+        }
+    }
+    var ret = place[~~(Math.random()*(place.length-1)+1)]
+    // console.log("random choose:" + ret);
+    return ret;
 }
 
 function next() {
@@ -128,7 +198,7 @@ function init() {
     $('#newGame').click(restart);
 }
 function chooseB(n) {
-    var str = "#b" + n;
+    var str = '#b' + n;
     if (blockArr[n] === 5) {
         $(str).append(itemArr[item]);
         blockArr[n] = item;
