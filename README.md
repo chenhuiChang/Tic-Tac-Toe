@@ -6,4 +6,4 @@ use Yeoman generator-webapp
 
 
 demo page:
-https://chenhuichang.github.io/Tic-Tac-Toe/demo/index.html
+https://chenhuichang.github.io/Tic-Tac-Toe/demo2/index.html
