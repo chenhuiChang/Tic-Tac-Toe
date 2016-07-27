@@ -1,5 +1,5 @@
-var itemArr = ['<i class="fa fa-circle-o fa-5x centerlize" aria-hidden="true"></i>',
-    '<i class="fa fa-times-circle fa-5x centerlize" aria-hidden="true"></i>'],
+var itemArr = ['<i class="fa fa-circle-o centerlize" style="font-size:7vw" aria-hidden="true"></i>',
+    '<i class="fa fa-times-circle fa-5x centerlize" style="font-size:7vw" aria-hidden="true"></i>'],
     item = 0,
     count = 0,
     blockArr = new Array(10),
