@@ -1,5 +1,6 @@
 var itemArr = ['<i class="fa fa-circle-o centerlize" style="font-size:7vw" aria-hidden="true"></i>',
     '<i class="fa fa-times-circle fa-5x centerlize" style="font-size:7vw" aria-hidden="true"></i>'],
+    initialItem = 0,
     item = 0,
     count = 0,
     blockArr = new Array(10),
@@ -176,15 +177,14 @@ function next() {
     }
 }
 function init() {
-    $('#b1').css({ 'height': $('#b1').width() + 'px' }).css({ 'border-top': 'none' }).css({ 'border-left': 'none' });
-    $('#b2').css({ 'height': $('#b2').width() + 'px' }).css({ 'border-top': 'none' });
-    $('#b3').css({ 'height': $('#b3').width() + 'px' }).css({ 'border-top': 'none' }).css({ 'border-right': 'none' });
-    $('#b4').css({ 'height': $('#b4').width() + 'px' }).css({ 'border-left': 'none' });
-    $('#b5').css({ 'height': $('#b5').width() + 'px' });
-    $('#b6').css({ 'height': $('#b6').width() + 'px' }).css({ 'border-right': 'none' });
-    $('#b7').css({ 'height': $('#b7').width() + 'px' }).css({ 'border-bottom': 'none' }).css({ 'border-left': 'none' });
-    $('#b8').css({ 'height': $('#b8').width() + 'px' }).css({ 'border-bottom': 'none' });
-    $('#b9').css({ 'height': $('#b9').width() + 'px' }).css({ 'border-bottom': 'none' }).css({ 'border-right': 'none' });
+    $('#b1').css({ 'border-top': 'none' }).css({ 'border-left': 'none' });
+    $('#b2').css({ 'border-top': 'none' });
+    $('#b3').css({ 'border-top': 'none' }).css({ 'border-right': 'none' });
+    $('#b4').css({ 'border-left': 'none' });
+    $('#b6').css({ 'border-right': 'none' });
+    $('#b7').css({ 'border-bottom': 'none' }).css({ 'border-left': 'none' });
+    $('#b8').css({ 'border-bottom': 'none' });
+    $('#b9').css({ 'border-bottom': 'none' }).css({ 'border-right': 'none' });
 
     $('#b1').click(function () { computer.term = true; chooseB(1); });
     $('#b2').click(function () { computer.term = true; chooseB(2); });
@@ -196,6 +196,9 @@ function init() {
     $('#b8').click(function () { computer.term = true; chooseB(8); });
     $('#b9').click(function () { computer.term = true; chooseB(9); });
     $('#newGame').click(restart);
+    $('#setO').click(function () { initialItem = 0; item = 0; });
+    $('#setX').click(function () { initialItem = 1; item = 1; });
+    $('#myModal').modal('show');
 }
 function chooseB(n) {
     var str = '#b' + n;
@@ -220,4 +223,5 @@ function restart() {
         blockArr[i] = 5;
     }
     count = 0;
+    item = initialItem;
 }
