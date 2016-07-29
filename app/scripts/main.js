@@ -154,24 +154,24 @@ function next() {
         var i = 0;
         for (; i < arr.length; i++) {
             if (arr[i] === 0) {
-                alert('O win!');
+                gameResult('O win!');
                 return true;
             } else if (arr[i] === 3) {
-                alert('X win!');
+                gameResult('X win!');
                 return true;
             }
         }
         return false;
     }
     if(check(row)) {
-        restart();
+        console.log('restart');
     } else if (check(col)) {
-        restart();
+        console.log('restart');
     } else if(check(cross)){
-        restart();
+        console.log('restart');
     } else if (count === 9) {
-        alert('Tie');
-        restart();
+        gameResult('Tie!');
+        console.log('restart');
     } else if (computer.term) {
         computer.run();
     }
@@ -198,6 +198,7 @@ function init() {
     $('#newGame').click(restart);
     $('#setO').click(function () { initialItem = 0; item = 0; });
     $('#setX').click(function () { initialItem = 1; item = 1; });
+    $('#result-confrim').click(restart);
     $('#myModal').modal('show');
 }
 function chooseB(n) {
@@ -224,4 +225,8 @@ function restart() {
     }
     count = 0;
     item = initialItem;
+}
+function gameResult(str) {
+    $('#resultLabel').html(str);
+    $('#result').modal('show');
 }
